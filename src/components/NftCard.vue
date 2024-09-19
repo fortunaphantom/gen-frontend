@@ -1,17 +1,26 @@
 <template>
   <v-container class="nft-card">
-    <a class="image-wrapper" :href="`/detail/${nft.chainId}/${nft.contractAddress}/${nft.tokenId}`">
-      <v-img
-        :src="nft.image"
-        :alt="nft.name"
-        aspect-ratio="1/1"
-        cover
+    <a
+      class="image-wrapper"
+      :href="`/detail/${nft.chainId}/${nft.contractAddress}/${nft.tokenId}`"
+    >
+      <img
+        v-if="!nft.metadata?.image?.toLowerCase().includes('.mp4')"
+        :src="imageUrl(nft.metadata?.image || '')"
+        :alt="nft.metadata?.name"
+        @error="onLoadError"
         class="img"
-      ></v-img>
+        
+      ></img>
+      <video v-else :src="imageUrl(nft.metadata?.image || '')" class="img"></video>
     </a>
     <div class="info">
-      <div>{{ nft.name }} (#{{ nft.tokenId }})</div>
-      <a :href="getContractLink(nft.chainId, nft.contractAddress)">{{ nft.contractAddress }}</a>
+      <div>
+        {{ trimString(`${nft.metadata?.name || ""} (#${nft.tokenId})`, 30) }}
+      </div>
+      <a :href="getContractLink(nft.chainId, nft.contractAddress)">{{
+        trimAddress(nft.contractAddress)
+      }}</a>
     </div>
   </v-container>
 </template>
@@ -19,10 +28,28 @@
 <script setup lang="ts">
 import { tNft } from "@/types/tNft";
 import { getContractLink } from "@/helpers/getContractLink";
+import { trimAddress } from "@/helpers/trimAddress";
+import { trimString } from "@/helpers/trimString";
 
 defineProps<{
   nft: tNft;
 }>();
+
+function imageUrl(url: string) {
+  if (!url) {
+    return "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTw_HeSzHfBorKS4muw4IIeVvvRgnhyO8Gn8w&s";
+  }
+
+  if (url.length === 46) {
+    return `https://ipfs.io/ipfs/${url}`;
+  }
+
+  return url;
+}
+
+function onLoadError(event: any) {
+  event.target.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTw_HeSzHfBorKS4muw4IIeVvvRgnhyO8Gn8w&s";
+}
 </script>
 
 <style scoped lang="scss">
@@ -37,11 +64,18 @@ defineProps<{
   .image-wrapper {
     overflow: hidden;
     cursor: pointer;
+    aspect-ratio: 1;
   }
 
-  .img:hover {
-    transform: scale(1.1);
-    transition: all 0.3s;
+  .img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+
+    &:hover {
+      transform: scale(1.1);
+      transition: all 0.3s;
+    }
   }
 }
 

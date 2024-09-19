@@ -11,40 +11,21 @@
 </template>
 
 <script setup lang="ts">
-import { tNft } from '@/types/tNft';
+import { getOwnedNfts } from "@/api/getOwnedNfts";
+import { tNft } from "@/types/tNft";
+import { useAccount } from "@wagmi/vue";
+const { address } = useAccount();
 
-const nfts: tNft[] = [
-  {
-    contractAddress: "ContractAddress",
-    tokenId: "1",
-    image:
-      "https://img.freepik.com/free-vector/hand-drawn-nft-style-ape-illustration_23-2149622021.jpg",
-    name: "Name",
-    chainId: 1,
-  },
-  {
-    contractAddress: "ContractAddress",
-    tokenId: "2",
-    image:
-      "https://img.freepik.com/free-vector/hand-drawn-nft-style-ape-illustration_23-2149622021.jpg",
-    name: "Name",
-    chainId: 1,
-  },
-  {
-    contractAddress: "ContractAddress",
-    tokenId: "3",
-    image:
-      "https://img.freepik.com/free-vector/hand-drawn-nft-style-ape-illustration_23-2149622021.jpg",
-    name: "Name",
-    chainId: 1,
-  },
-  {
-    contractAddress: "ContractAddress",
-    tokenId: "4",
-    image:
-      "https://img.freepik.com/free-vector/hand-drawn-nft-style-ape-illustration_23-2149622021.jpg",
-    name: "Name",
-    chainId: 1,
-  },
-];
+const nfts = ref<tNft[]>([]);
+
+watch(
+  () => address.value,
+  (newValue) => {
+    if (newValue) {
+      getOwnedNfts(newValue).then((res) => (nfts.value = res));
+    } else {
+      nfts.value = [];
+    }
+  }
+);
 </script>

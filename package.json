@@ -11,8 +11,10 @@
     "@mdi/font": "7.4.47",
     "@tanstack/vue-query": "^5.56.2",
     "@wagmi/vue": "^0.0.45",
+    "axios": "^1.7.7",
     "core-js": "^3.37.1",
     "roboto-fontface": "*",
+    "v-lazy-image": "^2.1.1",
     "viem": "^2.21.10",
     "vue": "^3.4.31",
     "vuetify": "^3.6.11"
