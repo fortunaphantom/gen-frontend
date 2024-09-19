@@ -1,5 +1,5 @@
 <template>
-  <HelloWorld />
+  <NftGallery />
 </template>
 
 <script lang="ts" setup>
