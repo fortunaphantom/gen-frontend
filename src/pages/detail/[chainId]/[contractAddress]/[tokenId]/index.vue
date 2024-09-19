@@ -4,23 +4,29 @@
       <v-row>
         <v-col md="4" class="d-flex flex-column">
           <div>
-            <v-img :src="nft.metadata?.image" class="image"></v-img>
+            <v-img :src="assetUrl(metadata.image)" class="image"></v-img>
           </div>
-          <v-btn class="mt-5" color="#08f" @click="openTransfer = true"
+          <v-btn
+            v-if="(owner?.data as any)?.value?.toLowerCase() === address?.toLowerCase()"
+            class="mt-5"
+            color="#08f"
+            @click="openTransfer = true"
             >Transfer</v-btn
           >
         </v-col>
         <v-col md="8" class="d-flex flex-column ga-2 position-relative">
-          <div class="token-id">#{{ nft.tokenId }} {{ nft.metadata?.name }}</div>
-          <a :href="getContractLink(nft.chainId, nft.contractAddress)">{{
-            nft.contractAddress
+          <div class="token-id">#{{ tokenId }} {{ metadata?.name }}</div>
+          <a :href="getContractLink(chainId, contractAddress)">{{
+            contractAddress
           }}</a>
           <div
-            v-if="!!nft.metadata?.attributes && nft.metadata?.attributes.length > 0"
+            v-if="
+              !!metadata?.attributes && metadata?.attributes.length > 0
+            "
             class="attributes"
           >
             <h5 class="title">Attributes</h5>
-            <div v-for="attr in nft.metadata?.attributes" class="attribute">
+            <div v-for="attr in metadata?.attributes" class="attribute">
               <div class="trait">{{ attr.trait_type }}</div>
               <div class="value">{{ attr.value }}</div>
             </div>
@@ -36,88 +42,63 @@
     </v-responsive>
   </v-container>
 
-  <TransferDialog v-model:open="openTransfer" />
+  <TransferDialog
+    v-model:open="openTransfer"
+    :chain-id="chainId"
+    :contract-address="contractAddress"
+    :token-id="tokenId"
+  />
 </template>
 
 <script lang="ts" setup>
 import { getContractLink } from "@/helpers/getContractLink";
 import { tNft } from "@/types/tNft";
+import { useAccount, useReadContract } from "@wagmi/vue";
+import Transfer721Abi from "@/contract/Transfer721.json";
+import axios from "axios";
+import { assetUrl } from "@/helpers/assetUrl";
 
 const route = useRoute();
-const chainId = (route.params as any).chainId;
+const chainId = Number((route.params as any).chainId);
 const contractAddress = (route.params as any).contractAddress;
 const tokenId = (route.params as any).tokenId;
 
-const nft: tNft = {
-  tokenId: "1",
-  contractAddress: "ContractAddress",
-  chainId: 1,
-  metadata: {
-    image:
-      "https://img.freepik.com/free-vector/hand-drawn-nft-style-ape-illustration_23-2149622021.jpg",
-    name: "Name",
-    description:
-      "Friendly OpenSea Creature that enjoys long swims in the ocean.",
-    attributes: [
-      {
-        display_type: "string",
-        trait_type: "Base",
-        value: "Starfish",
-      },
-      {
-        display_type: "number",
-        trait_type: "Level",
-        value: 5,
-      },
-      {
-        display_type: "string",
-        trait_type: "Personality9",
-        value: "Sad",
-      },
-      {
-        display_type: "string",
-        trait_type: "Personality8",
-        value: "Sad",
-      },
-      {
-        display_type: "string",
-        trait_type: "Personality7",
-        value: "Sad",
-      },
-      {
-        display_type: "string",
-        trait_type: "Personality6",
-        value: "Sad",
-      },
-      {
-        display_type: "string",
-        trait_type: "Personality5",
-        value: "Sad",
-      },
-      {
-        display_type: "string",
-        trait_type: "Personality4",
-        value: "Sad",
-      },
-      {
-        display_type: "string",
-        trait_type: "Personality3",
-        value: "Sad",
-      },
-      {
-        display_type: "string",
-        trait_type: "Personality2",
-        value: "Sad",
-      },
-      {
-        display_type: "string",
-        trait_type: "Personality1",
-        value: "Sad",
-      },
-    ],
-  },
-};
+const { address } = useAccount();
 
+const owner = useReadContract({
+  abi: Transfer721Abi,
+  address: contractAddress,
+  functionName: "ownerOf",
+  args: [tokenId],
+});
+
+const tokenUri = useReadContract({
+  abi: Transfer721Abi,
+  address: contractAddress,
+  functionName: "tokenURI",
+  args: [tokenId],
+  chainId: chainId,
+});
+
+watch<string>(
+  () => tokenUri.data.value as string,
+  (newValue) => {
+    axios
+      .get(newValue)
+      .then(
+        (res) => {
+          metadata.value = res.data;
+          console.log(res.data);
+        },
+        (err) => {
+          console.error(err);
+        }
+      )
+      .catch((ex) => console.error(ex));
+  }
+);
+
+const metadata = ref<any>({});
 const openTransfer = ref(false);
 </script>
 

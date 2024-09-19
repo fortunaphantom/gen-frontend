@@ -34,9 +34,19 @@
 <script setup lang="ts">
 import { getMetadata } from "@/api/getMetadata";
 import { trimAddress } from "@/helpers/trimAddress";
-import { useAccount, useDisconnect } from "@wagmi/vue";
+import {
+  useAccount,
+  useDisconnect,
+  useSwitchChain,
+  useWriteContract,
+} from "@wagmi/vue";
+import GenNftAbi from "@/contract/GenNft.json";
+import { NFT_ADDRESS } from "@/config";
+
 const { address } = useAccount();
 const { disconnect } = useDisconnect();
+const { switchChain } = useSwitchChain();
+const { writeContract } = useWriteContract();
 
 const openConnect = ref(false);
 
@@ -51,6 +61,17 @@ async function onMint() {
     try {
       const res = await getMetadata();
       console.log(res);
+
+      // switch chain
+      await switchChain({ chainId: 137 });
+
+      // mint the token
+      await writeContract({
+        abi: GenNftAbi,
+        address: NFT_ADDRESS,
+        functionName: "mint",
+        args: [res.url],
+      });
     } catch (ex) {
       console.error(ex);
     }

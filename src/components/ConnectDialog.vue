@@ -6,7 +6,7 @@
       <div class="content">
         <v-btn
           v-for="connector in connectors"
-          @click="connect({ connector, chainId }); dialog = false;"
+          @click="connect({ connector, chainId: 137 }); dialog = false;"
         >
           {{ connector.name }}
         </v-btn>
@@ -17,9 +17,8 @@
 
 <script setup lang="ts">
 import { ref, watch, defineProps, defineEmits } from "vue";
-import { useConnect, useChainId } from "@wagmi/vue";
+import { useConnect } from "@wagmi/vue";
 
-const chainId = useChainId();
 const { connectors, connect } = useConnect();
 
 // For v-model databinding

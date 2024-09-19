@@ -9,6 +9,7 @@ import { registerPlugins } from "@/plugins";
 import { WagmiPlugin } from "@wagmi/vue";
 import { config } from "./wagmi/config";
 import { QueryClient, VueQueryPlugin } from "@tanstack/vue-query";
+import "vue3-toastify/dist/index.css";
 
 // Components
 import App from "./App.vue";

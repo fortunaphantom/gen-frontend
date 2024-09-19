@@ -18,14 +18,18 @@ const { address } = useAccount();
 
 const nfts = ref<tNft[]>([]);
 
+onMounted(() => load(address.value));
+
 watch(
   () => address.value,
-  (newValue) => {
-    if (newValue) {
-      getOwnedNfts(newValue).then((res) => (nfts.value = res));
-    } else {
-      nfts.value = [];
-    }
-  }
+  (newValue) => load
 );
+
+function load(newValue: `0x${string}` | undefined) {
+  if (newValue) {
+    getOwnedNfts(newValue).then((res) => (nfts.value = res));
+  } else {
+    nfts.value = [];
+  }
+}
 </script>

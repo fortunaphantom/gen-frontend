@@ -6,13 +6,13 @@
     >
       <img
         v-if="!nft.metadata?.image?.toLowerCase().includes('.mp4')"
-        :src="imageUrl(nft.metadata?.image || '')"
+        :src="assetUrl(nft.metadata?.image || '')"
         :alt="nft.metadata?.name"
         @error="onLoadError"
         class="img"
         
       ></img>
-      <video v-else :src="imageUrl(nft.metadata?.image || '')" class="img"></video>
+      <video v-else :src="assetUrl(nft.metadata?.image || '')" class="img"></video>
     </a>
     <div class="info">
       <div>
@@ -30,22 +30,11 @@ import { tNft } from "@/types/tNft";
 import { getContractLink } from "@/helpers/getContractLink";
 import { trimAddress } from "@/helpers/trimAddress";
 import { trimString } from "@/helpers/trimString";
+import { assetUrl } from "@/helpers/assetUrl";
 
 defineProps<{
   nft: tNft;
 }>();
-
-function imageUrl(url: string) {
-  if (!url) {
-    return "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTw_HeSzHfBorKS4muw4IIeVvvRgnhyO8Gn8w&s";
-  }
-
-  if (url.length === 46) {
-    return `https://ipfs.io/ipfs/${url}`;
-  }
-
-  return url;
-}
 
 function onLoadError(event: any) {
   event.target.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTw_HeSzHfBorKS4muw4IIeVvvRgnhyO8Gn8w&s";
