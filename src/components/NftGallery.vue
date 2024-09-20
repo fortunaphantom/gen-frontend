@@ -1,8 +1,8 @@
 <template>
   <v-container class="fill-height">
-    <v-responsive class="align-centerfill-height mx-auto" max-width="900">
+    <v-responsive class="align-centerfill-height mx-auto w-100" max-width="1024">
       <v-row>
-        <v-col md="4" v-for="nft in nfts" :key="nft.tokenId">
+        <v-col cols="12" md="4" sm="6" v-for="nft in nfts" :key="nft.tokenId">
           <nft-card :nft="nft"></nft-card>
         </v-col>
       </v-row>

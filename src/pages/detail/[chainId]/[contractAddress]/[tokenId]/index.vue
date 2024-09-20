@@ -2,7 +2,7 @@
   <v-container class="fill-height">
     <v-responsive class="align-centerfill-height mx-auto" max-width="900">
       <v-row>
-        <v-col md="4" class="d-flex flex-column">
+        <v-col cols="12" md="4" class="d-flex flex-column">
           <div>
             <v-img :src="assetUrl(metadata.image)" class="image"></v-img>
           </div>
@@ -14,10 +14,10 @@
             >Transfer</v-btn
           >
         </v-col>
-        <v-col md="8" class="d-flex flex-column ga-2 position-relative">
+        <v-col cols="12" md="8" class="d-flex flex-column ga-2 position-relative">
           <div class="token-id">#{{ tokenId }} {{ metadata?.name }}</div>
           <a :href="getContractLink(chainId, contractAddress)">{{
-            contractAddress
+            trimAddress(contractAddress)
           }}</a>
           <div
             v-if="
@@ -57,6 +57,7 @@ import { useAccount, useReadContract } from "@wagmi/vue";
 import Transfer721Abi from "@/contract/Transfer721.json";
 import axios from "axios";
 import { assetUrl } from "@/helpers/assetUrl";
+import { trimAddress } from "@/helpers/trimAddress";
 
 const route = useRoute();
 const chainId = Number((route.params as any).chainId);

@@ -42,11 +42,12 @@ import {
 } from "@wagmi/vue";
 import GenNftAbi from "@/contract/GenNft.json";
 import { NFT_ADDRESS } from "@/config";
+import { toast } from "vue3-toastify";
 
 const { address } = useAccount();
 const { disconnect } = useDisconnect();
-const { switchChain } = useSwitchChain();
-const { writeContract } = useWriteContract();
+const { switchChainAsync } = useSwitchChain();
+const { writeContractAsync } = useWriteContract();
 
 const openConnect = ref(false);
 
@@ -63,16 +64,23 @@ async function onMint() {
       console.log(res);
 
       // switch chain
-      await switchChain({ chainId: 137 });
+      await switchChainAsync({ chainId: 137 });
 
       // mint the token
-      await writeContract({
+      await writeContractAsync({
         abi: GenNftAbi,
         address: NFT_ADDRESS,
         functionName: "mint",
         args: [res.url],
       });
     } catch (ex) {
+      toast("Error in minting", {
+        theme: "colored",
+        type: "error",
+        autoClose: 1000,
+        transition: "flip",
+        dangerouslyHTMLString: true,
+      });
       console.error(ex);
     }
   }
