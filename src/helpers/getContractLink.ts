@@ -10,6 +10,6 @@ export const getContractLink = (chainId: number, contractAddress: string) => {
   if (chainId === 56) {
     return `https://bscscan.com/address/${contractAddress}`;
   }
-  
+
   return `https://etherscan.io/address/${contractAddress}`;
-}
+};

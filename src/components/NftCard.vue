@@ -31,13 +31,14 @@ import { getContractLink } from "@/helpers/getContractLink";
 import { trimAddress } from "@/helpers/trimAddress";
 import { trimString } from "@/helpers/trimString";
 import { assetUrl } from "@/helpers/assetUrl";
+import { DEFAULT_IMAGE } from "@/config";
 
 defineProps<{
   nft: tNft;
 }>();
 
 function onLoadError(event: any) {
-  event.target.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTw_HeSzHfBorKS4muw4IIeVvvRgnhyO8Gn8w&s";
+  event.target.src = DEFAULT_IMAGE;
 }
 </script>
 

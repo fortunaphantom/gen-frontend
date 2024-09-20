@@ -9,7 +9,9 @@
         hint="Enter your destination address"
         v-model="toAddress"
       ></v-text-field>
-      <v-btn class="btn-transfer" @click="onTransfer">Transfer</v-btn>
+      <v-btn class="btn-transfer" @click="onTransfer" :disabled="transfering">{{
+        transfering ? "Transfering ..." : "Transfer"
+      }}</v-btn>
     </v-container>
   </v-dialog>
 </template>
@@ -37,6 +39,7 @@ const props = defineProps<{
 // internal state
 const dialog = ref(props.open);
 const toAddress = ref("");
+const transfering = ref(false);
 
 // Watch for changes in the prop and update internal state
 watch(
@@ -78,6 +81,7 @@ async function onTransfer() {
     return;
   }
 
+  transfering.value = true;
   try {
     // switch chain
     await switchChainAsync({ chainId: props.chainId });
@@ -107,6 +111,7 @@ async function onTransfer() {
     console.log("Error in transferring token");
     console.error(ex);
   }
+  transfering.value = false;
 }
 </script>
 

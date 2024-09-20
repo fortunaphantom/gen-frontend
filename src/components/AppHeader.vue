@@ -11,7 +11,9 @@
         text="Mint"
         class="mint-button"
         @click="onMint"
-      ></v-btn>
+        :disabled="minting"
+        >{{ minting ? "Minting ..." : "Mint" }}</v-btn
+      >
       <v-btn
         :text="address ? trimAddress(address) : 'Connect Wallet'"
         id="menu-activator"
@@ -50,6 +52,7 @@ const { switchChainAsync } = useSwitchChain();
 const { writeContractAsync } = useWriteContract();
 
 const openConnect = ref(false);
+const minting = ref(false);
 
 function onConnect() {
   if (!address.value) {
@@ -59,6 +62,7 @@ function onConnect() {
 
 async function onMint() {
   if (address.value) {
+    minting.value = true;
     try {
       const res = await getMetadata();
       console.log(res);
@@ -73,6 +77,14 @@ async function onMint() {
         functionName: "mint",
         args: [res.url],
       });
+
+      toast("Successfully minted", {
+        theme: "colored",
+        type: "success",
+        autoClose: 1000,
+        transition: "flip",
+        dangerouslyHTMLString: true,
+      });
     } catch (ex) {
       toast("Error in minting", {
         theme: "colored",
@@ -83,6 +95,7 @@ async function onMint() {
       });
       console.error(ex);
     }
+    minting.value = false;
   }
 }
 

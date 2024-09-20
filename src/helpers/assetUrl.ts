@@ -1,6 +1,8 @@
+import { DEFAULT_IMAGE } from "@/config";
+
 export function assetUrl(url: string) {
   if (!url) {
-    return "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTw_HeSzHfBorKS4muw4IIeVvvRgnhyO8Gn8w&s";
+    return DEFAULT_IMAGE;
   }
 
   if (url.length === 46) {

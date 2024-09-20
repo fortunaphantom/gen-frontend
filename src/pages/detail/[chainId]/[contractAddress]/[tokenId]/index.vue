@@ -52,7 +52,6 @@
 
 <script lang="ts" setup>
 import { getContractLink } from "@/helpers/getContractLink";
-import { tNft } from "@/types/tNft";
 import { useAccount, useReadContract } from "@wagmi/vue";
 import Transfer721Abi from "@/contract/Transfer721.json";
 import axios from "axios";
