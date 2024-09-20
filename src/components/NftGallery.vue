@@ -31,9 +31,7 @@
           <nft-card :nft="nft"></nft-card>
         </v-col>
       </v-row>
-      <div v-else class="no-nfts">
-        You don't have any nfts
-      </div>
+      <div v-else class="no-nfts">You don't have any nfts</div>
     </v-responsive>
   </v-container>
 </template>
@@ -50,12 +48,10 @@ const loading = ref(false);
 
 onMounted(() => load(address.value));
 
-watch(
-  () => address.value,
-  (newValue) => load
-);
+watch(address, (newValue) => load(newValue));
 
 function load(newValue: `0x${string}` | undefined) {
+  console.log({ newValue });
   if (newValue) {
     loading.value = true;
     getOwnedNfts(newValue)
@@ -74,6 +70,5 @@ function load(newValue: `0x${string}` | undefined) {
 <style scoped lang="scss">
 .no-nfts {
   text-align: center;
-
 }
 </style>

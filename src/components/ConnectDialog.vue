@@ -6,7 +6,10 @@
       <div class="content">
         <v-btn
           v-for="connector in connectors"
-          @click="connect({ connector, chainId: 137 }); dialog = false;"
+          @click="
+            connect({ connector, chainId: 137 });
+            dialog = false;
+          "
         >
           {{ connector.name }}
         </v-btn>
@@ -38,12 +41,9 @@ watch(
   }
 );
 
-watch(
-  () => dialog.value,
-  (newValue) => {
-    emit("update:open", newValue);
-  }
-);
+watch(dialog, (newValue) => {
+  emit("update:open", newValue);
+});
 </script>
 
 <style scoped lang="scss">

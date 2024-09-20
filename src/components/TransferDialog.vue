@@ -49,12 +49,9 @@ watch(
   }
 );
 
-watch(
-  () => dialog.value,
-  (newValue) => {
-    emit("update:open", dialog.value);
-  }
-);
+watch(dialog, (newValue) => {
+  emit("update:open", newValue);
+});
 
 async function onTransfer() {
   // check wallet connect
