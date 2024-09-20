@@ -1,4 +1,3 @@
-import { tNft } from "@/types/tNft";
 import axios from "axios";
 
 export const getMetadata = async () => {
