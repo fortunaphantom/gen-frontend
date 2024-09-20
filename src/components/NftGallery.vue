@@ -31,7 +31,9 @@
           <nft-card :nft="nft"></nft-card>
         </v-col>
       </v-row>
-      <div v-else class="no-nfts">You don't have any nfts</div>
+      <div v-else class="no-nfts">
+        {{ !address ? "Please connect wallet" : "You don't have any nfts" }}
+      </div>
     </v-responsive>
   </v-container>
 </template>
